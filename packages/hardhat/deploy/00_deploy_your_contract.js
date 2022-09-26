@@ -18,19 +18,19 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const yourCollectible = await ethers.getContract("YourCollectible", deployer);
 
   // ToDo: Verify your contract with Etherscan for public chains
-  // if (chainId !== "31337") {
-  //   try {
-  //     console.log(" 🎫 Verifing Contract on Etherscan... ");
-  //     await sleep(3000); // wait 3 seconds for deployment to propagate bytecode
-  //     await run("verify:verify", {
-  //       address: yourCollectible.address,
-  //       contract: "contracts/YourCollectible.sol:YourCollectible",
-  //       // contractArguments: [yourToken.address],
-  //     });
-  //   } catch (e) {
-  //     console.log(" ⚠️ Failed to verify contract on Etherscan ");
-  //   }
-  // }
+  if (chainId !== "31337") {
+    try {
+      console.log(" 🎫 Verifing Contract on Etherscan... ");
+      await sleep(3000); // wait 3 seconds for deployment to propagate bytecode
+      await run("verify:verify", {
+        address: yourCollectible.address,
+        contract: "contracts/YourCollectible.sol:YourCollectible",
+        // contractArguments: [yourToken.address],
+      });
+    } catch (e) {
+      console.log(" ⚠️ Failed to verify contract on Etherscan ");
+    }
+  }
 };
 
 function sleep(ms) {

@@ -474,8 +474,10 @@ function App(props) {
     });
   };
 
-    /*
   const riggedRoll = async () => {
+    setDiceRolled(true);
+    setDiceRollImage("ROLL");
+
     tx(writeContracts.RiggedRoll.riggedRoll({ gasLimit: 500000 }), update => {
       console.log("TX UPDATE", update);
       if (update?.status === "sent" || update?.status === 1) {
@@ -495,7 +497,6 @@ function App(props) {
   };
 
   const riggedFilter = readContracts.DiceGame?.filters.Roll(riggedRoll.address, null);
-
   readContracts.DiceGame?.on(riggedFilter, (_, value) => {
     if (value) {
       const numberRolled = value.toNumber().toString(16).toUpperCase();
@@ -503,7 +504,6 @@ function App(props) {
       setDiceRolled(false);
     }
   });
-*/
 
   const filter = readContracts.DiceGame?.filters.Roll(address, null);
 
@@ -573,24 +573,24 @@ function App(props) {
                   <Button type="primary" disabled={diceRolled} onClick={rollTheDice}>
                     Roll the dice!
                   </Button>
-                  {/*
-                  <div style={{ padding: 16 }}>
-                    <Account
-                      address={readContracts?.RiggedRoll?.address}
-                      localProvider={localProvider}
-                      userSigner={false}
-                      mainnetProvider={mainnetProvider}
-                      price={price}
-                      web3Modal={false}
-                      loadWeb3Modal={false}
-                      logoutOfWeb3Modal={false}
-                      blockExplorer={blockExplorer}
-                    />
-                    <Button style={{ margin: 16 }} type="primary" disabled={diceRolled} onClick={riggedRoll}>
-                      Rigged Roll!
-                    </Button>
-                  </div>
-                */}
+                  {
+                    <div style={{ padding: 16 }}>
+                      <Account
+                        address={readContracts?.RiggedRoll?.address}
+                        localProvider={localProvider}
+                        userSigner={false}
+                        mainnetProvider={mainnetProvider}
+                        price={price}
+                        web3Modal={false}
+                        loadWeb3Modal={false}
+                        logoutOfWeb3Modal={false}
+                        blockExplorer={blockExplorer}
+                      />
+                      <Button style={{ margin: 16 }} type="primary" disabled={diceRolled} onClick={riggedRoll}>
+                        Rigged Roll!
+                      </Button>
+                    </div>
+                  }
                 </div>
                 {diceRollImg}
               </div>

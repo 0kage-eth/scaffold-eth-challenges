@@ -1,4 +1,3 @@
-
 const { ethers } = require("hardhat");
 
 const localChainId = "31337";
@@ -17,7 +16,5 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
 
   // Getting a previously deployed contract
   const DiceGame = await ethers.getContract("DiceGame", deployer);
-
-
 };
 module.exports.tags = ["DiceGame"];

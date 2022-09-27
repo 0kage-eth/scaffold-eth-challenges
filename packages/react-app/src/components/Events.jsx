@@ -32,6 +32,8 @@ export default function Events({ contracts, contractName, eventName, localProvid
           ? " ⟠ -->🎈 Address | Trade | AmountIn | AmountOut"
           : eventName === "TokenToEthSwap"
           ? "🎈-->⟠ Address | Trade | AmountOut | AmountIn"
+          : eventName === "Approval"
+          ? "👀 Owner | Spender |  Approved Amount"
           : eventName === "LiquidityProvided"
           ? "➕ Address | Liquidity Minted | Eth In | Balloons In"
           : "➖ Address | Liquidity Withdrawn | ETH out | Balloons Out "}
@@ -41,11 +43,7 @@ export default function Events({ contracts, contractName, eventName, localProvid
         dataSource={events}
         renderItem={item => {
           if (!item || !item.args || item.args.length === 0) {
-            return (
-              <List.Item key={item.blockNumber + "_"}>
-                Event without arguments
-              </List.Item>
-            );
+            return <List.Item key={item.blockNumber + "_"}>Event without arguments</List.Item>;
           }
           return (
             <List.Item key={item.blockNumber + "_" + item.args[0].toString()}>
@@ -56,7 +54,7 @@ export default function Events({ contracts, contractName, eventName, localProvid
                 `${item.args[1].toString()}`
               )}
               <TokenBalance balance={item.args[2]} provider={localProvider} />
-              <TokenBalance balance={item.args[3]} provider={localProvider} />
+              {item.args.length > 2 ? <TokenBalance balance={item.args[3]} provider={localProvider} /> : <div></div>}
             </List.Item>
           );
         }}

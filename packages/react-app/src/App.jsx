@@ -258,14 +258,16 @@ function App(props) {
 
   // ** TODO: The events are not showing up! Left most of it commented out, but can uncomment and play with! Pretty sure you need to go into DEX.jsx as that is where most of the UI Home-page is being derived from. 😵 📟 Listen for broadcast events
 
+  const ApprovalEvents = useEventListener(readContracts, "Balloons", "Approval", localProvider, 1);
+  console.log("👀 Owner | Spender |  Approved Amount", ApprovalEvents);
   const EthToTokenSwapEvents = useEventListener(readContracts, "DEX", "EthToTokenSwap", localProvider, 1);
   console.log("⟠ -->🎈 EthToTokenSwapEvents:", EthToTokenSwapEvents);
-  // const TokenToEthSwapEvents = useEventListener(readContracts, "DEX", "TokenToEthSwap", 1);
-  // // console.log("🎈-->⟠ TokenToEthSwapEvents:", TokenToEthSwapEvents);
-  // const LiquidityProvidedEvents = useEventListener(readContracts, "DEX", "LiquidityProvided", 1);
-  // // console.log("➕ LiquidityProvidedEvents:", LiquidityProvidedEvents);
-  // const LiquidityRemovedEvents = useEventListener(readContracts, "DEX", "LiquidityRemoved", 1);
-  // // console.log("➖ LiquidityRemovedEvents:", LiquidityRemovedEvents);
+  const TokenToEthSwapEvents = useEventListener(readContracts, "DEX", "TokenToEthSwap", localProvider, 1);
+  console.log("🎈-->⟠ TokenToEthSwapEvents:", TokenToEthSwapEvents);
+  const LiquidityProvidedEvents = useEventListener(readContracts, "DEX", "LiquidityProvided", localProvider, 1);
+  console.log("➕ LiquidityProvidedEvents:", LiquidityProvidedEvents);
+  const LiquidityRemovedEvents = useEventListener(readContracts, "DEX", "LiquidityRemoved", localProvider, 1);
+  console.log("➖ LiquidityRemovedEvents:", LiquidityRemovedEvents);
 
   return (
     <div className="App">
@@ -375,8 +377,16 @@ function App(props) {
             mainnetProvider={mainnetProvider}
             startBlock={1}
           />
+          <Events
+            contracts={readContracts}
+            contractName="Balloons"
+            eventName="Approval"
+            localProvider={localProvider}
+            mainnetProvider={mainnetProvider}
+            startBlock={1}
+          />
         </Route>
-        }
+
         <Route exact path="/debug">
           {/*
                 🎛 this scaffolding is full of commonly used components

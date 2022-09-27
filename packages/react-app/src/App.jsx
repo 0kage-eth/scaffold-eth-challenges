@@ -482,7 +482,9 @@ function App(props) {
   }
 
   const buyTokensEvents = useEventListener(readContracts, "Vendor", "BuyTokens", localProvider, 1);
+  const sellTokenEvents = useEventListener(readContracts, "Vendor", "SellTokens", localProvider, 1);
   console.log("📟 buyTokensEvents:", buyTokensEvents);
+  console.log("📟 sellTokensEvents:", sellTokenEvents);
 
   const [tokenBuyAmount, setTokenBuyAmount] = useState({
     valid: false,
@@ -575,7 +577,7 @@ function App(props) {
               }}
               to="/"
             >
-              YourToken
+              Your Token Example
             </Link>
           </Menu.Item>
           <Menu.Item key="/contracts">
@@ -637,8 +639,7 @@ function App(props) {
                 </div>
               </Card>
             </div>
-            {/*Extra UI for buying the tokens back from the user using "approve" and "sellTokens"
-
+            {/* /*Extra UI for buying the tokens back from the user using "approve" and "sellTokens"* */}
             <Divider />
             <div style={{ padding: 8, marginTop: 32, width: 300, margin: "auto" }}>
               <Card title="Sell Tokens">
@@ -653,20 +654,16 @@ function App(props) {
                       const newValue = e.target.value.startsWith(".") ? "0." : e.target.value;
                       const sellAmount = {
                         value: newValue,
-                        valid: /^\d*\.?\d+$/.test(newValue)
-                      }
+                        valid: /^\d*\.?\d+$/.test(newValue),
+                      };
                       setTokenSellAmount(sellAmount);
                     }}
                   />
                   <Balance balance={ethValueToSellTokens} dollarMultiplier={price} />
                 </div>
-                {isSellAmountApproved?
-
+                {isSellAmountApproved ? (
                   <div style={{ padding: 8 }}>
-                    <Button
-                      disabled={true}
-                      type={"primary"}
-                    >
+                    <Button disabled={true} type={"primary"}>
                       Approve Tokens
                     </Button>
                     <Button
@@ -674,7 +671,11 @@ function App(props) {
                       loading={buying}
                       onClick={async () => {
                         setBuying(true);
-                        await tx(writeContracts.Vendor.sellTokens(tokenSellAmount.valid && ethers.utils.parseEther(tokenSellAmount.value)));
+                        await tx(
+                          writeContracts.Vendor.sellTokens(
+                            tokenSellAmount.valid && ethers.utils.parseEther(tokenSellAmount.value),
+                          ),
+                        );
                         setBuying(false);
                         setTokenSellAmount("");
                       }}
@@ -683,48 +684,45 @@ function App(props) {
                       Sell Tokens
                     </Button>
                   </div>
-                  :
+                ) : (
                   <div style={{ padding: 8 }}>
                     <Button
                       type={"primary"}
                       loading={buying}
                       onClick={async () => {
                         setBuying(true);
-                        await tx(writeContracts.YourToken.approve(readContracts.Vendor.address, tokenSellAmount.valid && ethers.utils.parseEther(tokenSellAmount.value)));
+                        await tx(
+                          writeContracts.YourToken.approve(
+                            readContracts.Vendor.address,
+                            tokenSellAmount.valid && ethers.utils.parseEther(tokenSellAmount.value),
+                          ),
+                        );
                         setBuying(false);
-                        let resetAmount = tokenSellAmount
+                        let resetAmount = tokenSellAmount;
                         setTokenSellAmount("");
-                        setTimeout(()=>{
-                          setTokenSellAmount(resetAmount)
-                        },1500)
+                        setTimeout(() => {
+                          setTokenSellAmount(resetAmount);
+                        }, 1500);
                       }}
                       disabled={!tokenSellAmount.valid}
-                      >
+                    >
                       Approve Tokens
                     </Button>
-                    <Button
-                      disabled={true}
-                      type={"primary"}
-                    >
+                    <Button disabled={true} type={"primary"}>
                       Sell Tokens
                     </Button>
                   </div>
-                    }
-
-
+                )}
               </Card>
             </div>
-            */}
             <div style={{ padding: 8, marginTop: 32 }}>
               <div>Vendor Token Balance:</div>
               <Balance balance={vendorTokenBalance} fontSize={64} />
             </div>
-
             <div style={{ padding: 8 }}>
               <div>Vendor ETH Balance:</div>
               <Balance balance={vendorETHBalance} fontSize={64} /> ETH
             </div>
-
             <div style={{ width: 500, margin: "auto", marginTop: 64 }}>
               <div>Buy Token Events:</div>
               <List
@@ -742,7 +740,22 @@ function App(props) {
                 }}
               />
             </div>
-
+            <div style={{ width: 500, margin: "auto", marginTop: 64 }}>
+              <div>Sell Token Events:</div>
+              <List
+                dataSource={sellTokenEvents}
+                renderItem={item => {
+                  return (
+                    <List.Item key={item.blockNumber + item.blockHash}>
+                      <Address value={item.args[0]} ensProvider={mainnetProvider} fontSize={16} />
+                      sold
+                      <Balance balance={item.args[2]} /> Tokens to receive
+                      <Balance balance={item.args[1]} /> ETH
+                    </List.Item>
+                  );
+                }}
+              />
+            </div>
             {/*
 
                 🎛 this scaffolding is full of commonly used components
@@ -799,7 +812,8 @@ function App(props) {
       </div>
 
       <div style={{ marginTop: 32, opacity: 0.5 }}>
-        Created by <Address value={"Your...address"} ensProvider={mainnetProvider} fontSize={16} />
+        Created by{" "}
+        <Address value={"0xd7Dd548772fF126999a1a02640beFA34C2ce470B"} ensProvider={mainnetProvider} fontSize={16} />
       </div>
 
       <div style={{ marginTop: 32, paddingBottom: 128, opacity: 0.5 }}>
